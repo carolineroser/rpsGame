@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
+    <style> body {padding: 0; margin: 0;} </style>
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.dom.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+      
+      <style>
+    h1 {
+      text-align: center;
+    }
+    body {background-color: rgb(192, 201, 202);}
+    table {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    td {
+      width: 25%;
+      text-align: center;
+      padding: 10px;
+    }
+    button {
+      background-color: #E8E8E8;
+      padding: 10px;
+    }
+  </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+  <script>
+    var h;
+    var otherReady = true;
+    var ready = true;
+    var otherChoice = -1;
+    var myChoice = -1;
+    var handpics = ["rockhand.jpg", "paperhand.jpg", "scissorshand.jpg"];
+    var socket;
+      socket = io.connect(window.location.host);
+      socket.on('choice', newChoice)
+      socket.on('new', otherNew)
+   
+      function addColor(obj) {
+      obj.style.backgroundColor = "purple";
+    }
+    
+    function removeColor(obj) {
+      obj.style.backgroundColor = "#E8E8E8";
+    }
+     
+    function displayResult(obj) {
+        if (ready){
+          ready = false;
+          var data = {
+            choice: obj.id ,
+            name: h
+          }
+          myChoice = obj.id;
+          document.images[3].src = handpics[myChoice];
+          socket.emit ('choice', data);
+          if (otherChoice > -1){
+            document.images[4].src = handpics[otherChoice];
+          }
+        }
+      }
+      
+      function newChoice(choice) {
+          if (otherReady){
+            otherReady = false;
+          console.log(choice);
+          otherChoice= choice.choice;
+          if(myChoice>-1){
+            document.images[4].src = handpics[choice.choice];
+          }
+        }  
+      }
+
+      function newGame(){
+        myChoice = -1;
+        otherChoice = -1;
+        ready = true;
+        otherReady = true;
+        document.images[3].src = "blank.jpg";
+        document.images[4].src = "blank.jpg";
+        socket.emit('new')
+      }
+ 
+      function otherNew(){
+        myChoice = -1;
+        otherReady = true;
+        otherChoice = -1;
+        ready = true;
+        document.images[3].src = "blank.jpg";
+        document.images[4].src = "blank.jpg";
+      } 
+      
+      function inputName() {
+        h = document.forms["myForm"]["fname"].value;
+        socket.emit("Username" , h);
+      }
+       
+  </script>
+  </head>
+  <body>
+  <h1>Rock, Paper, Scissors</h1>
+  <h2><form name = "myForm" onsubmit="inputName()">Name: <input type = "text" name = "fname"><input type = "submit" value = "Submit"></form>
+      </h2>
+    <table>
+    <tr>
+      <td><h1>Choose...</h1></td>
+      <td>
+        <button type="button" id="0" onmouseover="addColor(this)"
+                onmouseout="removeColor(this)"
+                onclick="displayResult(this)">
+          <image src="rock.jpg" alt="ROCK"></image>
+        </button>
+      </td>
+      <td>
+        <button type="button" id="1" onmouseover="addColor(this)"
+                onmouseout="removeColor(this)"
+                onclick="displayResult(this)">
+          <image src="paper.jpg" alt="PAPER"></image>
+        </button>
+      </td>
+      <td>
+        <button type="button" id="2" onmouseover="addColor(this)"
+                onmouseout="removeColor(this)"
+                onclick="displayResult(this)">
+          <image src="scissors.jpg" alt="SCISSORS"></image>
+        </button> 
+      </td>
+    </tr>
+    <tr>
+        <td><h1 id = "player1"></h1></td>
+        <td><img src="blank.jpg" alt=""></td>
+        <td><h1 id = "player2"></h1></td>
+        <td><img src="blank.jpg" alt=""></td>
+    </tr>
+    <tr>
+      <td>
+        <button type ="button" id = "new" onclick = "newGame()">NEW</button>
+      </td>
+  </table>
+  <!--https://www.w3schools.com/js/tryit.asp?filename=tryjs_validation_js-->
+</body>
+</html>
