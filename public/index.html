@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    h1{
+      text-align: center;
+    }
+    table{
+      width: 80%;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    button{
+      background-color: antiquewhite;
+      padding: 10px;
+    }
+  </style>
+  <script>
+    var otherReady = true;
+    var handpics = ["rockhand.jpg", "paperhand.jpg", "scissorshand.jpg"];
+
+    function addColor(obj){
+      obj.style.backgroundColor = "purple";
+    }
+
+    function removeColor(obj){
+      obj.style.backgroundColor =  "antiquewhite";
+    }
+
+    function displayresult(you,me){
+      document.images[3].src = handpics[you];
+      document.images[4].src = handpics[me];
+    }
+
+    function newChoice(choice){
+  
+    }
+
+//clock atithmetic
+//me = computer
+    function determineWinner(you, me){
+      if ( you == me )
+        return "tie";
+      else if ( (you + 1) % 3 == me )
+        return "me";
+      else if ( (me + 1) % 3 == you )
+        return "you";
+      else
+        return "error"; // shouldn't happen
+    }
+
+    function chooseAndDisplay(obj) {
+      var you = obj.id;
+      var me = Math.floor(Math.random() * 3);
+      displayresult(you, me);
+      switch ( determineWinner(you, me) ) {
+        case "tie":
+        document.getElementById("whowon").innerHTML = "A Tie!";
+        break;
+        case "me":
+        document.getElementById("whowon").innerHTML = "I Win!";
+        break;
+        case "you":
+        document.getElementById("whowon").innerHTML = "You Win!";
+        break;
+      }
+    }
+
+  </script>
+</head>
+
+<body>
+  <h1>Rock, Paper, Scissors</h1>
+  <table>
+
+    <tr>
+      <td><h1>Choose...</h1>
+      </td>
+      <td>
+        <button type="button" id = "0" onmouseover="addColor(this)" 
+                              onmouseout="removeColor(this)"
+                              onclick="chooseAndDisplay(this)">
+          <image src = "rock.jpg" alt = "ROCK"></image>
+        </button>
+      </td>
+      <td>
+        <button type="button" id = "1" onmouseover="addColor(this)" 
+                              onmouseout="removeColor(this)"
+                              onclick="chooseAndDisplay(this)">
+          <image src = "paper.jpg" alt = "PAPER"></image>
+        </button>
+      </td>
+      <td>
+        <button type="button" id = "2" onmouseover="addColor(this)" 
+                              onmouseout="removeColor(this)"
+                              onclick="chooseAndDisplay(this)">
+          <image src = "scissors.jpg" alt = "SCISSORS"></image>
+        </button>
+      </td>
+    </tr>
+
+    <tr>
+      <td><h1>You...</h1></td>
+      <td><img src = "blank.jpg" id = "yourresult"></td>
+      <td><h1>Me...</h1></td>
+      <td><img src = "blank.jpg" id = "yourresult"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan="3"><h1 id = "whowon"></h1></td>
+    </tr>
+  </table>
+
+</body>
+</html>
